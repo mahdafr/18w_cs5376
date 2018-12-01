@@ -5,16 +5,15 @@ package agent;
  * @created Nov21 W
  * @modified Nov22 R
  *
- * Dummy agent SAD chooses to add honeypots, strengthen, or do nothing depending its previous action.
+ * Defender agent Dummy chooses to add honeypots, strengthen, or do nothing depending its previous action.
  */
 
 import apiaryparty.*;
 
 public class Dummy extends Defender{
-
     public Dummy(String graphFile)
     {
-        super("SAD",graphFile);
+        super("Dummy",graphFile);
     }
 
     @Override

@@ -5,5 +5,7 @@ To work with the [Apiary Party](https://github.com/osveliz/ApiaryParty) library
 - this package's source code is not modified
 
 # Commit History
+- created Derpy agent skeleton code (@mahdokht to debug)
+- updated Alphalpha agent (@james to debug)
 - added Alphalpha agent skeleton code (@james to fix)
 - added Dummy agent skeleton code

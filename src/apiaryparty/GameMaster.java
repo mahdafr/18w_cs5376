@@ -1,6 +1,7 @@
 package apiaryparty;
 
 import java.util.ArrayList;
+import agent.*;
 
 /**
  * Pits Attacker and Defender agents against one another in the name of Science!
@@ -22,7 +23,7 @@ public class GameMaster {
 	 * @param args not using any command line arguments
 	 */
 	public static void main(String[] args) {
-		int numGames = 1;
+		int numGames = 3;
 		generateGraphs(numGames);
 
 		// add Defenders here
@@ -30,6 +31,7 @@ public class GameMaster {
 		defenders.add(new WorkerBee("0"));
 		defenders.add(new Honeycomb("0"));
 		defenders.add(new QueenDBee("0"));
+		defenders.add(new Derpy("0"));
 
 		// get names of defenders
 		String[] defenderNames = new String[defenders.size()];
@@ -79,6 +81,7 @@ public class GameMaster {
 		//attackers.add(new BumbleBeeMan());
 		attackers.add(new Beedrill());
 		attackers.add(new YellowJacket());
+		attackers.add(new Alphalpha());
 
 		// get names of attackers
 		String[] attackerNames = new String[attackers.size()];
@@ -149,6 +152,8 @@ public class GameMaster {
 		if (name.equalsIgnoreCase("QeenDBee"))
 			return new QueenDBee(file);
 		// add your defender
+		if (name.equalsIgnoreCase("Derpy"))
+			return new Derpy(file);
 
 		// invalid defender if name could not be found
 		return new Defender("", "") {
@@ -183,6 +188,8 @@ public class GameMaster {
 			return new YellowJacket(defName, file);
 
 		// add your attacker here
+		if (atName.equalsIgnoreCase("Alphalpha"))
+			return new Alphalpha(defName, file);
 
 		// in case your name was not added
 		return new Attacker("", "", "") {
