@@ -1,64 +1,61 @@
-package agent;
-
-/**
- * @author mahdafr
- * @created Nov21 W
- * @modified Nov22 R
- *
- * Alphalpha agent DAS chooses to attack honeypots, strengthen, or do nothing depending its previous action.
- */
-
-import apiaryparty.*;
+package apiaryparty;
 
 public class Alphalpha extends Attacker {
-    private final static String attackerName = "DAS";
 
-    public Alphalpha(String defenderName, String graphFile) {
-        super(attackerName, defenderName, graphFile);
-    }
-
-    public Alphalpha(){
-        super(attackerName);
-    }
-
-    protected void initialize() {}
-
-    public AttackerAction makeAction() {
-        AttackerActionType type;
-        int nodeID = -1;
-
-        for( Node x: availableNodes ) {
-            if ( x.getSv()==-1 ) {
-                nodeID = x.getNodeID();
-                type = AttackerActionType.PROBE_POINTS;
-                return new AttackerAction(type, nodeID);
-            }
-        }
-        int nodeIDmaxSV = -1;
-        int nodeIDminmaxSV = -1;
-        int maxSV = Integer.MIN_VALUE;
-        int minmaxSV = Integer.MAX_VALUE;
-        for( Node x: availableNodes ) {
-            if ( (x.getSv()<=10) && (maxSV<x.getSv()) ) {
-                maxSV = x.getSv();
-                nodeIDmaxSV = x.getNodeID();
-            } else if ( x.getSv()>10 && x.getSv()<minmaxSV ) {
-                nodeIDminmaxSV = x.getNodeID();
-                minmaxSV = x.getSv();
-            }
-        }
-
-        type = AttackerActionType.ATTACK;
-        if( nodeIDmaxSV!=-1 )
-            return new AttackerAction(type, nodeIDmaxSV);
-        return new AttackerAction(type, nodeIDminmaxSV);
-    }
+    private final static String attackerName = "Alphalpha";
 
     /**
-     * The game master is giving you the result of the action.
-     * @param lastNode the node successfully attacked
+     * Constructor
+     * @param defenderName defender's name
+     * @param graphFile graph to read
      */
-    protected void result(Node lastNode) {
+	public GreenHornet(String defenderName, String graphFile) {
+		super(attackerName, defenderName, graphFile);
+	}
+	
+	public Alphalpha(){
+		super(attackerName);
+	}
+	
+	/**
+	 * If you need to initialize anything, do it  here
+	 */
+	protected void initialize(){
+	}
 
-    }
+
+	@Override
+	public AttackerAction makeAction() {
+
+	    if(availableNodes.isEmpty())
+		return new AttackerAction(AttackerActionType.INVALID, 0);
+
+	    ArrayList<Node> cleanNodes = new ArrayList<>();
+	    
+	    for(Node n : availableNodes){
+		if(n.getHoneyPot() != 1)
+		    cleanNodes.add(n);
+	    }
+
+	    if(cleanNodes.isEmpty())
+		return new AttackerAction(AttackerActionType.INVALID, 0);
+	    
+	    Node min = cleanNodes.get(0);
+	    for(Node n : cleanNodes){
+		if(n.getSv() < min.getSv())
+		    min = n;
+	    }
+
+	    if(min.getHoneyPot() == -1)
+		return new AttackerAction(AttackerActionType.PROBE_HONEYPOT, min.getNodeID());
+	    else if(min.getSv() <= 15)
+		return new AttackerAction(AttackerActionType.ATTACK, min.getNodeID());
+	    else
+		return new AttackerAction(AttackerActionType.SUPERATTACK, min.getNodeID());
+
+	@Override
+	protected void result(Node lastNode) {
+		// TODO Auto-generated method stub
+		
+	}
 }
