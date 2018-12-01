@@ -1,7 +1,5 @@
 package apiaryparty;
 
-import agent.*;
-
 import java.util.ArrayList;
 
 /**
@@ -29,7 +27,9 @@ public class GameMaster {
 
 		// add Defenders here
 		ArrayList<Defender> defenders = new ArrayList<Defender>();
-		defenders.add(new Dummy("0"));
+		defenders.add(new WorkerBee("0"));
+		defenders.add(new Honeycomb("0"));
+		defenders.add(new QueenDBee("0"));
 
 		// get names of defenders
 		String[] defenderNames = new String[defenders.size()];
@@ -75,7 +75,10 @@ public class GameMaster {
 		
 		// add Attackers here
 		ArrayList<Attacker> attackers = new ArrayList<Attacker>();
-		attackers.add(new Alphalpha());
+		attackers.add(new GreenHornet());
+		//attackers.add(new BumbleBeeMan());
+		attackers.add(new Beedrill());
+		attackers.add(new YellowJacket());
 
 		// get names of attackers
 		String[] attackerNames = new String[attackers.size()];

@@ -26,6 +26,9 @@ hs_err_pid*
 .idea/
 *.properties
 *.xml
+*.graph
+*.defense
+*.history
 
 # orig repo
 #src/apiaryparty/
