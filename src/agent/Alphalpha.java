@@ -32,34 +32,41 @@ public class Alphalpha extends Attacker {
 
 	@Override
 	public AttackerAction makeAction() {
-	    //if there are no nodes, return Invalid
-        if (availableNodes.isEmpty())
-            return new AttackerAction(AttackerActionType.INVALID, 0);
+	    java.util.ArrayList<Node> cleanNodes = new java.util.ArrayList<>();
 
-        java.util.ArrayList<Node> cleanNodes = new java.util.ArrayList<>();
-
-        //check if any node is a honeypot
-        for (Node n : availableNodes) {
-            if (n.getHoneyPot() != 1)
+        for(Node n: net.getAvailableNodes()) {
+            if(!n.isHoneyPot())
                 cleanNodes.add(n);
         }
-        if (cleanNodes.isEmpty())
+
+        if(cleanNodes.isEmpty())
             return new AttackerAction(AttackerActionType.INVALID, 0);
 
-        //find minimum SV in the list of nodes to attack
         Node min = cleanNodes.get(0);
-        for (Node n : cleanNodes) {
-            if (n.getSv() < min.getSv())
-                min = n;
+
+        for(Node cn: cleanNodes) {
+            if(cn.getSv() < min.getSv())
+                min = cn;
         }
 
-        //determine Attacker action
-        if (min.getHoneyPot() == -1)
+        if( min.getHoneyPot() == -1 )
             return new AttackerAction(AttackerActionType.PROBE_HONEYPOT, min.getNodeID());
-        else if ( min.getSv() < 15 )
-            return new AttackerAction(AttackerActionType.ATTACK, min.getNodeID());
-        else
-            return new AttackerAction(AttackerActionType.SUPERATTACK, min.getNodeID());
+
+        if( min.getSv() > 16 ) {
+            if(this.budget >= Parameters.SUPERATTACK_RATE) {
+                return new AttackerAction(AttackerActionType.SUPERATTACK, min.getNodeID());
+            }
+            else if(this.budget >= Parameters.ATTACK_RATE) {
+                return new AttackerAction(AttackerActionType.ATTACK, min.getNodeID());
+            }
+            else return new AttackerAction(AttackerActionType.END_TURN, min.getNodeID());
+        }
+        else {
+            if(this.budget >= Parameters.ATTACK_RATE) {
+                return new AttackerAction(AttackerActionType.ATTACK, min.getNodeID());
+            }
+            else return new AttackerAction(AttackerActionType.END_TURN, min.getNodeID());
+        }
     }
 
 	@Override

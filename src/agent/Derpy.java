@@ -10,8 +10,6 @@ package agent;
 
 import apiaryparty.*;
 
-import java.util.Queue;
-
 public class Derpy extends Defender{
     public Derpy(String graphFile)
     {
@@ -24,18 +22,12 @@ public class Derpy extends Defender{
         actionList = new java.util.ArrayDeque();
         int cost = 0;
 
-        for ( Node n : net.getAvailableNodes() ) {
+        for ( Node n : net.getAvailableNodes() )
             if ( n.getSv()==0 ) {
                 int i = 0;
-                for ( Node ney : n.getNeighborList()) {
-                    if ( i==0)
-                        cost += Parameters.HONEYPOT_RATE; //honeypotMe(ney);
-                    else
-                        cost += Parameters.FIREWALL_RATE; //fireWallMe(ney);
-                    i++;
-                }
+                cost += Parameters.HONEYPOT_RATE;
+                cost += Parameters.FIREWALL_RATE*(n.getNeighborList().size()-1);
             }
-        }
 
         if ( cost<=getBudget() )
             order66();
