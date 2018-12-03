@@ -2,8 +2,8 @@
 ## About the Agents
 The `src` directory includes the following packages:
 - `agent`
-    - champion Defender: ___Derpy___
-    - champion Attacker: ___Alphalpha___
+    - champion Defender, ___Derpy___, that makes decision depending on the parameters of the game in playing strategies, where each strategy is implemented by each of the driver agents (defenders) included in the `agent` package.
+    - champion Attacker, ___Alphalpha___, that makes decision depending on the parameters of the game in playing strategies, where each strategy is implemented by each of the driver agents (attackers) included in the `agent` package.
 - `apiaryparty` <br/>
 
 In the agent package, we developed Defenders and Attackers that implement different strategies to defending and attacking nodes in the graph.
