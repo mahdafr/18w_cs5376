@@ -26,8 +26,8 @@ public class Alphalpha extends Attacker {
 	 * If you need to initialize anything, do it  here
 	 */
 	protected void initialize() {
-//		System.out.format("%s nodes in graph: %d\nParameter nodes in graph: %d\n",
-//				this.getName(), this.net.getNodes().length, Parameters.NUMBER_OF_NODES);
+		System.out.format("%s nodes in graph: %d\nParameter nodes in graph: %d\n",
+				this.getName(), this.net.getNodes().length, Parameters.NUMBER_OF_NODES);
 		honey = net.getNodes().length > Parameters.NUMBER_OF_NODES;
 	}
 
@@ -52,7 +52,7 @@ public class Alphalpha extends Attacker {
 	    }
 
 	    if(cleanNodes.isEmpty()) {
-//		    System.out.println("All nodes are honeypots");
+		    System.out.println("All nodes are honeypots");
 		    return new AttackerAction(AttackerActionType.INVALID, 0);
 	    }
 
@@ -110,7 +110,7 @@ public class Alphalpha extends Attacker {
 			    action.nodeID = an.getNodeID();
 		    }
 	    }
-//	    System.out.format("Action: %s\tNodeID: %d\tExVal: %f\n", action.move, action.nodeID, maxExVal);
+	    System.out.format("Action: %s\tNodeID: %d\tExVal: %f\n", action.move, action.nodeID, maxExVal);
 	    return action;
     }
 

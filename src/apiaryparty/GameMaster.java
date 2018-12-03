@@ -23,7 +23,7 @@ public class GameMaster {
 	 * @param args not using any command line arguments
 	 */
 	public static void main(String[] args) {
-		int numGames = 10;
+		int numGames = 1;
 		generateGraphs(numGames);
 
 		// add Defenders here
@@ -32,7 +32,7 @@ public class GameMaster {
 //		defenders.add(new Honeycomb("0"));
 //		defenders.add(new QueenDBee("0"));
 		defenders.add(new Derpy("0"));
-		//defenders.add(new Joker("0")); //fixme infinite loop?
+//		defenders.add(new Joker("0"));
 
 		// get names of defenders
 		String[] defenderNames = new String[defenders.size()];
@@ -78,12 +78,12 @@ public class GameMaster {
 		
 		// add Attackers here
 		ArrayList<Attacker> attackers = new ArrayList<Attacker>();
-		attackers.add(new GreenHornet());
+//		attackers.add(new GreenHornet());
 //		attackers.add(new BumbleBeeMan());
-		attackers.add(new Beedrill());
-		attackers.add(new YellowJacket());
+//		attackers.add(new Beedrill());
+//		attackers.add(new YellowJacket());
 		attackers.add(new Alphalpha());
-		attackers.add(new ExMachina());
+//		attackers.add(new ExMachina());
 
 		// get names of attackers
 		String[] attackerNames = new String[attackers.size()];
