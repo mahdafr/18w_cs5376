@@ -23,7 +23,7 @@ public class GameMaster {
 	 * @param args not using any command line arguments
 	 */
 	public static void main(String[] args) {
-		int numGames = 5;
+		int numGames = 1;
 		generateGraphs(numGames);
 
 		// add Defenders here
@@ -83,7 +83,7 @@ public class GameMaster {
 		attackers.add(new Beedrill());
 		attackers.add(new YellowJacket());
 		attackers.add(new Alphalpha());
-		attackers.add(new Aardvark()); //fixme infinite loop
+		attackers.add(new ExMachina());
 
 		// get names of attackers
 		String[] attackerNames = new String[attackers.size()];
@@ -197,6 +197,8 @@ public class GameMaster {
 			return new Alphalpha(defName, file);
 		if ( atName.equalsIgnoreCase("Aardvark"))
 			return new Aardvark(defName,file);
+		if ( atName.equalsIgnoreCase("ExMachina"))
+			return new ExMachina(defName,file);
 
 		// in case your name was not added
 		return new Attacker("", "", "") {
