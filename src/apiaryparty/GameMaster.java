@@ -32,7 +32,7 @@ public class GameMaster {
 //		defenders.add(new Honeycomb("0"));
 //		defenders.add(new QueenDBee("0"));
 		defenders.add(new Derpy("0"));
-//		defenders.add(new Joker("0"));
+		//defenders.add(new Joker("0")); //fixme infinite loop?
 
 		// get names of defenders
 		String[] defenderNames = new String[defenders.size()];
@@ -83,6 +83,7 @@ public class GameMaster {
 		attackers.add(new Beedrill());
 		attackers.add(new YellowJacket());
 		attackers.add(new Alphalpha());
+		attackers.add(new Aardvark()); //fixme infinite loop
 
 		// get names of attackers
 		String[] attackerNames = new String[attackers.size()];
@@ -194,6 +195,8 @@ public class GameMaster {
 		// add your attacker here
 		if (atName.equalsIgnoreCase("Alphalpha"))
 			return new Alphalpha(defName, file);
+		if ( atName.equalsIgnoreCase("Aardvark"))
+			return new Aardvark(defName,file);
 
 		// in case your name was not added
 		return new Attacker("", "", "") {

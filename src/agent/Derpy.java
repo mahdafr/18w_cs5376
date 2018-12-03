@@ -41,7 +41,6 @@ public class Derpy extends Defender {
         if(cost <= getBudget())
             System.out.format("Cost: %d\nBudget: %d\nEXECUTING ORDER 66!\n\n", cost, this.getBudget());
             order66();
-        //if probing costs too much, let's do E(N)
         //if honeypotting costs little, execute Order66
     }
 
