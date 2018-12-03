@@ -7,11 +7,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Derpy extends Defender {
+
     public Derpy(String graphFile)
     {
         super("Derpy",graphFile);
     }
-    private java.util.ArrayDeque<DefenderAction> actionList;
+
+    private ArrayDeque<DefenderAction> actionList;
+    private enum Strategy {
+        TRAP, HONEY, STRENGTHEN
+    }
+    private Strategy strat;
 
     @Override
     public void initialize() {
@@ -38,10 +44,17 @@ public class Derpy extends Defender {
             }
         }
 
-        if(cost <= getBudget())
-            System.out.format("Cost: %d\nBudget: %d\nEXECUTING ORDER 66!\n\n", cost, this.getBudget());
-            order66();
-        //if honeypotting costs little, execute Order66
+        if (cost <= getBudget()) {
+//            System.out.format("Cost: %d\nBudget: %d\nEXECUTING ORDER 66!\n\n", cost, this.getBudget());
+            preorder66();
+            strat = Strategy.TRAP;
+        } else if (Parameters.HONEYPOT_RATE / getBudget() < 0.333) {
+//            System.out.println("Can't trap, hp cost still low");
+            strat = Strategy.HONEY;
+        } else {
+//            System.out.println("hp cost very high");
+            strat = Strategy.STRENGTHEN;
+        }
     }
 
     @Override
@@ -50,6 +63,20 @@ public class Derpy extends Defender {
     @Override
     public DefenderAction makeAction() {
 
+        switch (strat) {
+            case TRAP:
+                return order66();
+            case HONEY:
+                return noProbeBestResponse();
+            case STRENGTHEN:
+                return noProbeBestResponse();
+            default:
+                return noProbeBestResponse();
+        }
+    }
+
+
+    private DefenderAction order66() {
         ArrayList<Node> cleanNodes = new java.util.ArrayList<>();
 
         for(Node n: net.getAvailableNodes()) {
@@ -57,10 +84,12 @@ public class Derpy extends Defender {
                 cleanNodes.add(n);
         }
 
-        if(cleanNodes.isEmpty())
-            System.out.println("All nodes are honeypots wtf");
+        if(cleanNodes.isEmpty()) {
+//            System.out.println("All nodes are honeypots");
+            return new DefenderAction(DefenderActionType.INVALID);
+        }
 
-        System.out.format("Available non hp nodes: %s\n", cleanNodes.toString());
+//        System.out.format("Available non hp nodes: %s\n", cleanNodes.toString());
 
         DefenderAction action = actionList.poll();
 
@@ -70,32 +99,54 @@ public class Derpy extends Defender {
         return action;
     }
 
-    private void order66() {
+    private DefenderAction noProbeBestResponse() {
+        ArrayList<Node> cleanNodes = new ArrayList<>();
+
+        for(Node n : net.getAvailableNodes()) {
+            if(!n.isHoneyPot())
+                cleanNodes.add(n);
+        }
+
+        Node min = cleanNodes.get(0);
+
+        for(Node cn : cleanNodes) {
+            if(cn.getSv() < min.getSv())
+                min = cn;
+        }
+
+        if(this.getBudget() >= Parameters.HONEYPOT_RATE)
+            return new DefenderAction(DefenderActionType.HONEYPOT, min.getNodeID());
+        else if(this.getBudget() >= Parameters.STRENGTHEN_RATE)
+            return new DefenderAction(DefenderActionType.STRENGTHEN);
+        else return new DefenderAction(DefenderActionType.INVALID);
+    }
+
+    private void preorder66() {
 
         boolean first;
         actionList = new ArrayDeque<>();
 
-        System.out.format("All Nodes: %s\n", Arrays.toString(net.getNodes()));
+//        System.out.format("All Nodes: %s\n", Arrays.toString(net.getNodes()));
 
         for (Node n : net.getNodes()) {
             if (n.getSv() == 0) {
-                System.out.format("Public Node Found: Node %d\n", n.getNodeID());
-                System.out.format("Neighbors: %s\n", n.neighbor.toString());
+//                System.out.format("Public Node Found: Node %d\n", n.getNodeID());
+//                System.out.format("Neighbors: %s\n", n.neighbor.toString());
                 first = true;
                 for (Node ne : n.neighbor) {
                     if (first) {
 
-                        System.out.format("HoneyPotting: Node %d\n", n.getNodeID());
-                        System.out.println(isValidHP(n.getNodeID()));
+//                        System.out.format("HoneyPotting: Node %d\n", n.getNodeID());
+//                        System.out.println(isValidHP(n.getNodeID()));
                         actionList.add(new DefenderAction(DefenderActionType.HONEYPOT, n.getNodeID()));
 
-                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
+//                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
 //                        System.out.println(isValidFirewall(n.getNodeID(), ne.getNodeID()));
                         actionList.add(new DefenderAction(n.getNodeID(), ne.getNodeID()));
 
                         first = false;
                     } else {
-                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
+//                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
                         actionList.add(new DefenderAction(n.getNodeID(), ne.getNodeID()));
                     }
                 }
