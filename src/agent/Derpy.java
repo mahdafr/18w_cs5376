@@ -93,7 +93,7 @@ public class Derpy extends Defender {
                     if (first) {
 
 //                        System.out.format("HoneyPotting: Node %d\n", n.getNodeID());
-                        System.out.println(isValidHP(n.getNodeID()));
+//                        System.out.println(isValidHP(n.getNodeID()));
                         actionList.add(new DefenderAction(DefenderActionType.HONEYPOT, n.getNodeID()));
 
 //                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
