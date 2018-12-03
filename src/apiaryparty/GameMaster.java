@@ -23,15 +23,16 @@ public class GameMaster {
 	 * @param args not using any command line arguments
 	 */
 	public static void main(String[] args) {
-		int numGames = 3;
+		int numGames = 5;
 		generateGraphs(numGames);
 
 		// add Defenders here
 		ArrayList<Defender> defenders = new ArrayList<Defender>();
-		defenders.add(new WorkerBee("0"));
-		defenders.add(new Honeycomb("0"));
-		defenders.add(new QueenDBee("0"));
+//		defenders.add(new WorkerBee("0"));
+//		defenders.add(new Honeycomb("0"));
+//		defenders.add(new QueenDBee("0"));
 		defenders.add(new Derpy("0"));
+//		defenders.add(new Joker("0"));
 
 		// get names of defenders
 		String[] defenderNames = new String[defenders.size()];
@@ -78,7 +79,7 @@ public class GameMaster {
 		// add Attackers here
 		ArrayList<Attacker> attackers = new ArrayList<Attacker>();
 		attackers.add(new GreenHornet());
-		//attackers.add(new BumbleBeeMan());
+//		attackers.add(new BumbleBeeMan());
 		attackers.add(new Beedrill());
 		attackers.add(new YellowJacket());
 		attackers.add(new Alphalpha());
@@ -97,6 +98,7 @@ public class GameMaster {
 			for (int a = 0; a < numAttackers; a++) {
 				String attackerName = attackerNames[a];
 				for (int g = 0; g < numGames; g++) {
+					System.out.format("Defender: %s\nAttacker: %s\nGame: %d\n\n", defenderName, attackerName, g);
 					String graphName = g + "";
 					AttackerMonitor am = new AttackerMonitor(attackerName,defenderName, graphName);
 					Attacker attacker = getAttacker(defenderName,attackerName, graphName);
@@ -154,6 +156,8 @@ public class GameMaster {
 		// add your defender
 		if (name.equalsIgnoreCase("Derpy"))
 			return new Derpy(file);
+		if (name.equalsIgnoreCase("Joker"))
+			return new Joker(file);
 
 		// invalid defender if name could not be found
 		return new Defender("", "") {

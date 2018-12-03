@@ -1,16 +1,12 @@
 package agent;
 
-/**
- * @author mahdafr
- * @created Dec01 S
- * @modified Dec01 S
- *
- * Defender agent Derpy executes Order 66.
- */
-
 import apiaryparty.*;
 
-public class Derpy extends Defender{
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Derpy extends Defender {
     public Derpy(String graphFile)
     {
         super("Derpy",graphFile);
@@ -19,17 +15,31 @@ public class Derpy extends Defender{
 
     @Override
     public void initialize() {
-        actionList = new java.util.ArrayDeque();
+
         int cost = 0;
 
-        for ( Node n : net.getAvailableNodes() )
-            if ( n.getSv()==0 ) {
-                int i = 0;
-                cost += Parameters.HONEYPOT_RATE;
-                cost += Parameters.FIREWALL_RATE*(n.getNeighborList().size()-1);
+        // Estimate the cost of a guaranteed trap
+        for (Node n : net.getNodes()) {
+//            System.out.format("Node %d sv = %d\n", n.getNodeID(), n.getSv());
+            if (n.getSv() == 0) {
+                // Honeypot first, firewall all other paths
+                boolean first = true;
+                for (Node ne : n.neighbor) {
+                    // If it's not a public node update cost
+                    if (ne.getSv() != 0) {
+                        if (first) {
+                            cost += Parameters.HONEYPOT_RATE;
+                            cost += Parameters.FIREWALL_RATE;
+                            first = false;
+                        } else
+                            cost += Parameters.FIREWALL_RATE;
+                    }
+                }
             }
+        }
 
-        if ( cost<=getBudget() )
+        if(cost <= getBudget())
+            System.out.format("Cost: %d\nBudget: %d\nEXECUTING ORDER 66!\n\n", cost, this.getBudget());
             order66();
         //if probing costs too much, let's do E(N)
         //if honeypotting costs little, execute Order66
@@ -40,21 +50,55 @@ public class Derpy extends Defender{
 
     @Override
     public DefenderAction makeAction() {
-        if ( !actionList.isEmpty() )
-            return actionList.removeFirst(); //dequeue
-        return new DefenderAction(DefenderActionType.INVALID);
+
+        ArrayList<Node> cleanNodes = new java.util.ArrayList<>();
+
+        for(Node n: net.getAvailableNodes()) {
+            if(!n.isHoneyPot())
+                cleanNodes.add(n);
+        }
+
+        if(cleanNodes.isEmpty())
+            System.out.println("All nodes are honeypots wtf");
+
+        System.out.format("Available non hp nodes: %s\n", cleanNodes.toString());
+
+        DefenderAction action = actionList.poll();
+
+        if (action == null)
+            action = new DefenderAction(DefenderActionType.END_TURN);
+
+        return action;
     }
 
     private void order66() {
-        for ( Node n : net.getAvailableNodes() ) {
-            if ( n.getSv()==0 ) {
-                int i = 0;
-                for ( Node ney : n.getNeighborList()) {
-                    if ( i==0)
-                        actionList.addLast(new DefenderAction(DefenderActionType.HONEYPOT,n.getNodeID()));
-                    else
-                        actionList.addLast(new DefenderAction(DefenderActionType.FIREWALL,n.getNodeID()));
-                    i++;
+
+        boolean first;
+        actionList = new ArrayDeque<>();
+
+        System.out.format("All Nodes: %s\n", Arrays.toString(net.getNodes()));
+
+        for (Node n : net.getNodes()) {
+            if (n.getSv() == 0) {
+                System.out.format("Public Node Found: Node %d\n", n.getNodeID());
+                System.out.format("Neighbors: %s\n", n.neighbor.toString());
+                first = true;
+                for (Node ne : n.neighbor) {
+                    if (first) {
+
+                        System.out.format("HoneyPotting: Node %d\n", n.getNodeID());
+                        System.out.println(isValidHP(n.getNodeID()));
+                        actionList.add(new DefenderAction(DefenderActionType.HONEYPOT, n.getNodeID()));
+
+                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
+//                        System.out.println(isValidFirewall(n.getNodeID(), ne.getNodeID()));
+                        actionList.add(new DefenderAction(n.getNodeID(), ne.getNodeID()));
+
+                        first = false;
+                    } else {
+                        System.out.format("Firewalling: Node %d, Node %d\n", n.getNodeID(), ne.getNodeID());
+                        actionList.add(new DefenderAction(n.getNodeID(), ne.getNodeID()));
+                    }
                 }
             }
         }

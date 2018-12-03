@@ -1,5 +1,6 @@
 package apiaryparty;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -28,6 +29,9 @@ public class QueenDBee extends Defender{
 
 		@Override
 		public DefenderAction makeAction() {
+
+	   	    System.out.format("All Nodes: %s\n", Arrays.toString(net.getNodes()));
+
 			Random r = new Random();
 			int honeyNode = r.nextInt(net.getAvailableNodes().size());
 			int honeypotCost = honeypotCost(honeyNode);

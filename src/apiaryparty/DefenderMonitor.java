@@ -180,14 +180,17 @@ public class DefenderMonitor
                 int id2 = action.getFwall2();
                 System.out.println("Attempting to remove Edge [" + id1 + "," + id2 + "]");
                 if(isValidFirewall(id1,id2)){
+                	System.out.println("VALD FIREWALL");
                     Node n1 = net.getNode(id1);
                     Node n2 = net.getNode(id2);
                     n1.neighbor.remove(n2);
                     n2.neighbor.remove(n1);
                     budget -= Parameters.FIREWALL_RATE;
                 }
-                else
-                    budget -= Parameters.INVALID_RATE;
+                else {
+	                System.out.println("INVALD FIREWALL");
+	                budget -= Parameters.INVALID_RATE;
+                }
 
                 break;
             case HONEYPOT://honeypot
