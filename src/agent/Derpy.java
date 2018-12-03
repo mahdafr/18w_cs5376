@@ -31,7 +31,6 @@ public class Derpy extends Defender{
 
         if ( cost<=getBudget() )
             order66();
-        //if probing costs too much, let's do E(N)
         //if honeypotting costs little, execute Order66
     }
 
